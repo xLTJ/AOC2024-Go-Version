@@ -57,6 +57,15 @@ func TestCalculateSimilarity(t *testing.T) {
 
 func BenchmarkCalculateDistance(b *testing.B) {
 	for i := 0; i < b.N; i++ {
+		_, err := CalculateDistance("../Input.txt")
+		if err != nil {
+			return
+		}
+	}
+}
+
+func BenchmarkCalculateSimilarity(b *testing.B) {
+	for i := 0; i < b.N; i++ {
 		_, err := CalculateSimilarity("../Input.txt")
 		if err != nil {
 			return
