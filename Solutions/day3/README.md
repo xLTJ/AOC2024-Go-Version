@@ -1,7 +1,7 @@
 ## Benchmarks
 
 ### Part 1
-0.453 ms
+0.470 ms
 
 ### Part 2
-0.537 ms
+1.178 ms

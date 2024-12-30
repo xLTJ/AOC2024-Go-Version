@@ -5,7 +5,7 @@ import "utils"
 // CountSafeReports2 counts how many reports are safe from an input file, but now its actually fine if one
 // number can be removed to make it safe
 func CountSafeReports2(fileName string) (int, error) {
-	reports, err := utils.ReadAndParseLines(fileName, ParseLine)
+	reports, err := utils.ParseInput(fileName, ParseLine)
 	if err != nil {
 		return 0, err
 	}

@@ -17,7 +17,7 @@ func CalculateDistance(fileName string) (int, error) {
 	// Parsing input
 	var numberList slicePair
 	var err error
-	numberList.left, numberList.right, err = utils.ReadSplitAndParseLines(fileName, "   ", parseLine, parseLine)
+	numberList.left, numberList.right, err = utils.SplitAndParseInput(fileName, "   ", parseLine, parseLine)
 	if err != nil {
 		fmt.Println("Error reading and parsing file:", err)
 		return 0, err

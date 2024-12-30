@@ -1,8 +1,8 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"main/lib"
 	"os"
 )
 
@@ -16,7 +16,7 @@ func main() {
 
 	switch part {
 	case "1":
-		result, err := 0, errors.New("not implemented") // Implement actual solution here
+		result, err := lib.CalculateInstructions(inputFile)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
@@ -24,7 +24,7 @@ func main() {
 		fmt.Println(result)
 
 	case "2":
-		result, err := 0, errors.New("not implemented") // Implement actual solution here
+		result, err := lib.CalculateInstructions2(inputFile)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return

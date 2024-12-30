@@ -26,7 +26,7 @@ func ParseLine(line string) ([]int, error) {
 
 // CountSafeReports counts how many reports are safe from an input file
 func CountSafeReports(fileName string) (int, error) {
-	reports, err := utils.ReadAndParseLines(fileName, ParseLine)
+	reports, err := utils.ParseInput(fileName, ParseLine)
 	if err != nil {
 		return 0, err
 	}

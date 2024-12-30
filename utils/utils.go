@@ -5,10 +5,11 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 )
 
-// ReadAndParseLines reads a file line by line and parses each line using the provided parse function
+// ParseInput reads a file line by line and parses each line using the provided parse function
 //
 // Parameters:
 //   - filePath: The path to the file to be read
@@ -17,7 +18,7 @@ import (
 // Returns:
 //   - []T: A slice containing the parsed lines
 //   - error: An error if u fucked up somewhere
-func ReadAndParseLines[T any](filePath string, parseFunc func(string) (T, error)) ([]T, error) {
+func ParseInput[T any](filePath string, parseFunc func(string) (T, error)) ([]T, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
@@ -42,7 +43,7 @@ func ReadAndParseLines[T any](filePath string, parseFunc func(string) (T, error)
 	return values, nil
 }
 
-// ReadSplitAndParseLines reads a file line by line, splits each line using a separator,
+// SplitAndParseInput reads a file line by line, splits each line using a separator,
 // and parses the resulting parts using provided parsing functions
 // (cus i cant be bothered to make weird ahh parsing functions to do this with the other function)
 //
@@ -56,7 +57,7 @@ func ReadAndParseLines[T any](filePath string, parseFunc func(string) (T, error)
 //   - []T: A slice containing the parsed left parts of each line
 //   - []U: A slice containing the parsed right parts of each line
 //   - error: An error if u fucked up somewhere
-func ReadSplitAndParseLines[T, U any](filePath string, separator string, leftParseFunc func(string) (T, error), rightParseFunc func(string) (U, error)) ([]T, []U, error) {
+func SplitAndParseInput[T, U any](filePath string, separator string, leftParseFunc func(string) (T, error), rightParseFunc func(string) (U, error)) ([]T, []U, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, nil, err
@@ -92,4 +93,44 @@ func ReadSplitAndParseLines[T, U any](filePath string, separator string, leftPar
 	}
 
 	return left, right, nil
+}
+
+// MatchAndParseInput reads a file line by line, finds all matches based on the provided pattern,
+// and parses each found match using the provided parse function
+//
+// Parameters:
+//   - filePath: The path to the file to be read
+//   - pattern: The pattern to match
+//   - parseFunc: A function that parses the line. The function takes a slice of submatches
+//
+// Returns:
+//   - []T: A slice containing the parsed matches
+//   - error: An error if u fucked up somewhere
+func MatchAndParseInput[T any](filePath string, pattern *regexp.Regexp, parseFunc func([]string) (T, error)) ([]T, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var values []T
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		matches := pattern.FindAllStringSubmatch(line, -1)
+
+		for _, match := range matches {
+			val, err := parseFunc(match)
+			if err != nil {
+				return nil, err
+			}
+			values = append(values, val)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return values, nil
 }
