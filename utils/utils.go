@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -41,6 +42,59 @@ func ParseInput[T any](filePath string, parseFunc func(string) (T, error)) ([]T,
 	}
 
 	return values, nil
+}
+
+// ParseInputTwoParts does the same as ParseInput but the file has to seperate parts.
+//
+// Parameters:
+//   - filePath: The path to the file to be read
+//   - separator: The string used to the two parts
+//   - firstParseFunc: A function that parses each line of the first part
+//   - secondParseFunc: A function that parses each line of the second part
+//
+// Returns:
+//   - []T: A slice containing the parsed lines of the first part
+//   - []U: A slice containing the parsed lines of the second part
+//   - error: An error if u fucked up somewhere
+func ParseInputTwoParts[T, U any](filePath string, separator string, firstParseFunc func(string) (T, error), secondParseFunc func(string) (U, error)) ([]T, []U, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer file.Close()
+
+	var firstValues []T
+	var secondValues []U
+	scanner := bufio.NewScanner(file)
+	startedSecondPart := false
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == separator {
+			startedSecondPart = true
+			continue
+		}
+
+		if !startedSecondPart {
+			val, err := firstParseFunc(line)
+			if err != nil {
+				return nil, nil, err
+			}
+			firstValues = append(firstValues, val)
+		} else {
+			val, err := secondParseFunc(line)
+			if err != nil {
+				return nil, nil, err
+			}
+			secondValues = append(secondValues, val)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, nil, err
+	}
+
+	return firstValues, secondValues, nil
 }
 
 // SplitAndParseInput reads a file line by line, splits each line using a separator,
@@ -133,4 +187,19 @@ func MatchAndParseInput[T any](filePath string, pattern *regexp.Regexp, parseFun
 	}
 
 	return values, nil
+}
+
+// StringToIntSlice splits a string into a slice of integers using a given separator
+func StringToIntSlice(string string, separator string) ([]int, error) {
+	var slice []int
+
+	for _, part := range strings.Split(string, separator) {
+		number, err := strconv.Atoi(part)
+		if err != nil {
+			return nil, err
+		}
+		slice = append(slice, number)
+	}
+
+	return slice, nil
 }
