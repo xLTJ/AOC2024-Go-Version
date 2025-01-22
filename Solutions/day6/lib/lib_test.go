@@ -64,6 +64,37 @@ func TestCountLoopCreatingObstacles(t *testing.T) {
 	}
 }
 
+func TestCountLoopCreatingObstaclesGoroutine(t *testing.T) {
+	type args struct {
+		fileName string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    int
+		wantErr bool
+	}{
+		{
+			name:    "Example input",
+			args:    args{fileName: "testInput.txt"},
+			want:    6,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := CountLoopCreatingObstaclesGoroutine(tt.args.fileName)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("CountLoopCreatingObstaclesGoroutine() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("CountLoopCreatingObstaclesGoroutine() got = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func BenchmarkCountCellsPassed(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := CountCellsPassed("../Input.txt")
@@ -76,6 +107,15 @@ func BenchmarkCountCellsPassed(b *testing.B) {
 func BenchmarkCountLoopCreatingObstacles(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_, err := CountLoopCreatingObstacles("../Input.txt")
+		if err != nil {
+			return
+		}
+	}
+}
+
+func BenchmarkCountLoopCreatingObstaclesGoroutine(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, err := CountLoopCreatingObstaclesGoroutine("../Input.txt")
 		if err != nil {
 			return
 		}

@@ -5,3 +5,6 @@
 
 ### Part 2
 872.801 ms
+
+### Part 2 (Goroutines version)
+216.510 ms
