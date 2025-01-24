@@ -87,7 +87,7 @@ func worker(mapGrid MapGrid, originalPassedStates map[Coordinate]GuardState, tas
 // This way the workers are able to do stuff at the same time, as otherwise the new map would be modified multiple times
 // or we would have to create a deep copy of the map every time (very inefficient)
 func doesGuardLoop2(mapGrid MapGrid, guard Guard, obstacle Coordinate) bool {
-	var passedGuardStates = map[GuardState]bool{}
+	var passedGuardStates = make(map[GuardState]bool, 1100)
 
 	for i := 0; i < maxIterations; i++ {
 		nextCell := guard.getNextCell()
@@ -102,9 +102,16 @@ func doesGuardLoop2(mapGrid MapGrid, guard Guard, obstacle Coordinate) bool {
 		}
 
 		guard.move()
+
+		// only handling guard states every second move, improving the execution time by 50ms
+		if i%2 != 0 {
+			continue
+		}
+
 		if passedGuardStates[GuardState(guard)] {
 			return true
 		}
+
 		passedGuardStates[GuardState(guard)] = true
 	}
 	return false

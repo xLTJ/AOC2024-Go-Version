@@ -24,7 +24,7 @@ func main() {
 		fmt.Println(result)
 
 	case "2":
-		result, err := lib.CountLoopCreatingObstacles(inputFile)
+		result, err := lib.CountLoopCreatingObstaclesGoroutine(inputFile)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
