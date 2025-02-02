@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"main/lib"
 	"os"
@@ -25,7 +24,7 @@ func main() {
 		fmt.Println(result)
 
 	case "2":
-		result, err := 0, errors.New("not implemented") // Implement actual solution here
+		result, err := lib.CountAntinodes2(inputFile)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
